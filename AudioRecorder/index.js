@@ -2,8 +2,8 @@
 const buttonEl = document.getElementById('button');
 const messageEl = document.getElementById('message');
 const titleEl = document.getElementById('real-time-title');
-const localUrl = "";
-var msg = '';
+const localUrl = "https://weak-starfish-38.loca.lt/submit-voice";
+var msgCopy = '';
 // set initial state of application variables
 messageEl.style.display = 'none';
 let isRecording = false;
@@ -39,6 +39,7 @@ const run = async () => {
     // handle incoming messages to display transcription to the DOM
     const texts = {};
     socket.onmessage = (message) => {
+      let msg = '';
       const res = JSON.parse(message.data);
       texts[res.audio_start] = res.text;
       const keys = Object.keys(texts);
@@ -46,9 +47,11 @@ const run = async () => {
       for (const key of keys) {
         if (texts[key]) {
           msg += ` ${texts[key]}`;
+          msgCopy +=` ${texts[key]}`;
+          checkText(msgCopy);
         }
       }
-      console.log(msg)
+      console.log(msgCopy);
       messageEl.innerText = msg;
     };
 
@@ -108,15 +111,16 @@ function checkText(data) {
   sentences = data.split('.');
   if(sentences.at(-1).toLocaleLowerCase().includes("open")) {
     sendArduino(1);
-    msg = '';
+    console.log("Let's open this bich")
+    msgCopy = '';
   }
   else if (sentences.at(-1).toLocaleLowerCase().includes("close")) {
     sendArduino(0);
-    msg = '';
+    console.log("close bitc")
+    msgCopy = '';
   }
 }
 
-function sendArduino(command) {
-  bodyContent = {"command" : command};
-  const response = await fetch(url = localUrl, {body: JSON.stringify(bodyContent)})
+async function sendArduino(command) {
+  const response = await fetch(url = `${localUrl}?command=${command}`)
 }
