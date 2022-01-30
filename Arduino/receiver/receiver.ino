@@ -1,4 +1,12 @@
 #include <Servo.h>
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
+
+RF24 nrf(9, 8); // CE, CNS
+
+const byte address[6] = "gator";
 
 Servo servo;
 int angle = 10;
@@ -6,6 +14,11 @@ int angle = 10;
 void setup() {
   servo.attach(7);
   servo.write(angle);
+
+  nrf.begin();
+  nrf.openWritingPipe(address);
+  nrf.setPALevel(RF24_PA_MIN); // power amplifier level
+  nrf.startListening();
 }
 
 
