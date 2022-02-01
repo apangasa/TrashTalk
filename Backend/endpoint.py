@@ -19,7 +19,7 @@ def submit_voice():
     args = request.args
     command = args.get('command')
 
-    with open('./commands.data', 'a') as comm_file:
+    with open('./Backend/commands.data', 'a') as comm_file:
         comm_file.write(command)
     return jsonify(success=True), 200
 

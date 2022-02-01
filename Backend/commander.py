@@ -12,7 +12,7 @@ def check_file():
     global CURR_STATE
 
     commands = None
-    with open('./commands.data', 'r') as comm_file:
+    with open('./Backend/commands.data', 'r') as comm_file:
         commands = comm_file.read()
 
     if not len(commands):
